@@ -14,8 +14,6 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/tillberg/ansi-log"
-
 	"golang.org/x/crypto/ssh"
 	"golang.org/x/crypto/ssh/agent"
 )
@@ -131,6 +129,9 @@ func (ctx *ExecContext) reconnect() (err error) {
 		config := &ssh.ClientConfig{
 			User: username,
 			Auth: auths,
+			HostKeyCallback: func(hostname string, remote net.Addr, key ssh.PublicKey) error {
+				return nil
+			},
 		}
 		conn, err := net.DialTimeout("tcp", addr, networkTimeout)
 		if err != nil {
